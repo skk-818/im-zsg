@@ -1,0 +1,34 @@
+# 服务名称
+Name: edge_01
+
+# TCP
+TCPListenOn: 0.0.0.0:9898
+
+# ws
+WSListenOn: 0.0.0.0:443
+
+SendChanSize: 1024
+
+# kq etcd config
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: "edge_01"
+
+# kafka config
+KqConf:
+  Name: edge_01
+  Brokers:
+    - 127.0.0.1:9092
+  Group: group-edge-01
+  Topic: topic-edge-01
+  Offset: last
+  Consumers: 1
+  Processors: 1
+
+# rpc client config
+RpcClient:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: rpc.rpc
