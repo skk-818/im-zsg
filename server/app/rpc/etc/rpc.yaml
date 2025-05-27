@@ -1,6 +1,18 @@
 Name: rpc.rpc
-ListenOn: 0.0.0.0:8080
+ListenOn: 0.0.0.0:22001
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+    - 127.0.0.1:2379
   Key: rpc.rpc
+
+# 业务 redis
+BizRedis:
+  Host: 127.0.0.1:6379
+  Pass: '123456'
+  Type: node
+
+# edge 队列 注册信息的 etcd
+QueueEtcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: edge
