@@ -7,9 +7,8 @@ import (
 )
 
 type Config struct {
-	zrpc.RpcServerConf
 	RpcClient    zrpc.RpcClientConf
-	KqConf       *kq.KqConf
+	KqConf       kq.KqConf
 	KqEtcd       discov.EtcdConf
 	Name         string
 	TCPListenOn  string

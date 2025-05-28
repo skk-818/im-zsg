@@ -19,15 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Rpc_Ping_FullMethodName = "/pb.rpc/ping"
+	Rpc_Login_FullMethodName       = "/pb.Rpc/Login"
+	Rpc_Logout_FullMethodName      = "/pb.Rpc/Logout"
+	Rpc_PostMessage_FullMethodName = "/pb.Rpc/PostMessage"
 )
 
 // RpcClient is the client API for Rpc service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RpcClient interface {
-	// @desc ping
-	Ping(ctx context.Context, in *Nil, opts ...grpc.CallOption) (*Nil, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.CallOption) (*PostResponse, error)
 }
 
 type rpcClient struct {
@@ -38,9 +41,27 @@ func NewRpcClient(cc grpc.ClientConnInterface) RpcClient {
 	return &rpcClient{cc}
 }
 
-func (c *rpcClient) Ping(ctx context.Context, in *Nil, opts ...grpc.CallOption) (*Nil, error) {
-	out := new(Nil)
-	err := c.cc.Invoke(ctx, Rpc_Ping_FullMethodName, in, out, opts...)
+func (c *rpcClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, Rpc_Login_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rpcClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+	out := new(LogoutResponse)
+	err := c.cc.Invoke(ctx, Rpc_Logout_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rpcClient) PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.CallOption) (*PostResponse, error) {
+	out := new(PostResponse)
+	err := c.cc.Invoke(ctx, Rpc_PostMessage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +72,9 @@ func (c *rpcClient) Ping(ctx context.Context, in *Nil, opts ...grpc.CallOption) 
 // All implementations must embed UnimplementedRpcServer
 // for forward compatibility
 type RpcServer interface {
-	// @desc ping
-	Ping(context.Context, *Nil) (*Nil, error)
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	PostMessage(context.Context, *PostMsg) (*PostResponse, error)
 	mustEmbedUnimplementedRpcServer()
 }
 
@@ -60,8 +82,14 @@ type RpcServer interface {
 type UnimplementedRpcServer struct {
 }
 
-func (UnimplementedRpcServer) Ping(context.Context, *Nil) (*Nil, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+func (UnimplementedRpcServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedRpcServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedRpcServer) PostMessage(context.Context, *PostMsg) (*PostResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostMessage not implemented")
 }
 func (UnimplementedRpcServer) mustEmbedUnimplementedRpcServer() {}
 
@@ -76,20 +104,56 @@ func RegisterRpcServer(s grpc.ServiceRegistrar, srv RpcServer) {
 	s.RegisterService(&Rpc_ServiceDesc, srv)
 }
 
-func _Rpc_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Nil)
+func _Rpc_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RpcServer).Ping(ctx, in)
+		return srv.(RpcServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Rpc_Ping_FullMethodName,
+		FullMethod: Rpc_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RpcServer).Ping(ctx, req.(*Nil))
+		return srv.(RpcServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Rpc_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RpcServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Rpc_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RpcServer).Logout(ctx, req.(*LogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Rpc_PostMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostMsg)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RpcServer).PostMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Rpc_PostMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RpcServer).PostMessage(ctx, req.(*PostMsg))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -98,12 +162,20 @@ func _Rpc_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Rpc_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.rpc",
+	ServiceName: "pb.Rpc",
 	HandlerType: (*RpcServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ping",
-			Handler:    _Rpc_Ping_Handler,
+			MethodName: "Login",
+			Handler:    _Rpc_Login_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _Rpc_Logout_Handler,
+		},
+		{
+			MethodName: "PostMessage",
+			Handler:    _Rpc_PostMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

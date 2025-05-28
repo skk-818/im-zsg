@@ -22,8 +22,17 @@ func NewRpcServer(svcCtx *svc.ServiceContext) *RpcServer {
 	}
 }
 
-// @desc ping
-func (s *RpcServer) Ping(ctx context.Context, in *pb.Nil) (*pb.Nil, error) {
-	l := logic.NewPingLogic(ctx, s.svcCtx)
-	return l.Ping(in)
+func (s *RpcServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
+	l := logic.NewLoginLogic(ctx, s.svcCtx)
+	return l.Login(in)
+}
+
+func (s *RpcServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	l := logic.NewLogoutLogic(ctx, s.svcCtx)
+	return l.Logout(in)
+}
+
+func (s *RpcServer) PostMessage(ctx context.Context, in *pb.PostMsg) (*pb.PostResponse, error) {
+	l := logic.NewPostMessageLogic(ctx, s.svcCtx)
+	return l.PostMessage(in)
 }

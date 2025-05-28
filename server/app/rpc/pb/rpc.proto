@@ -2,8 +2,46 @@ syntax = "proto3";
 option go_package = "./pb";
 package pb;
 
-message Nil {}
-service rpc {
-  // @desc ping
-  rpc ping (Nil) returns (Nil);
+service Rpc {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc PostMessage(PostMsg) returns (PostResponse);
+}
+
+message LoginRequest {
+  string Token = 1; // 用户信息
+  string Authorization = 2; // 校验信息
+  string SessionId = 3;
+}
+
+message LoginResponse {
+  bytes body = 1;
+}
+
+message LogoutRequest {
+  string token = 1;
+  string sessionId = 2;
+}
+
+message LogoutResponse {
+  bytes body = 1;
+}
+
+message PostMsg {
+  uint32 Version = 1;
+  uint32 Status = 2;
+  uint32 ServiceId = 3;
+  uint32 Cmd = 4;
+  uint32 Seq = 5;
+  string Token = 6;
+  string ToToken = 7;
+  string SessionId = 8;
+  int64 Timestamp = 9;
+  string Msg = 10; // 消息内容
+}
+
+message PostResponse {
+  uint32 code = 1;
+  string desc = 2;
+  bytes data = 3;
 }

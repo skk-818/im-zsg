@@ -115,3 +115,17 @@ func GetQueueList(conf discov.EtcdConf) *QueueList {
 
 	return queueList
 }
+
+// Load 加载队列
+// 功能：加载队列
+// 参数：
+// s: 队列名称
+// 返回值：
+// *kq.Pusher 队列
+func (q *QueueList) Load(s string) (*kq.Pusher, bool) {
+	q.l.Lock()
+	defer q.l.Unlock()
+
+	queue, ok := q.kqs[s]
+	return queue, ok
+}

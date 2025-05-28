@@ -13,11 +13,17 @@ import (
 )
 
 type (
-	Nil = pb.Nil
+	LoginRequest   = pb.LoginRequest
+	LoginResponse  = pb.LoginResponse
+	LogoutRequest  = pb.LogoutRequest
+	LogoutResponse = pb.LogoutResponse
+	PostMsg        = pb.PostMsg
+	PostResponse   = pb.PostResponse
 
 	Rpc interface {
-		// @desc ping
-		Ping(ctx context.Context, in *Nil, opts ...grpc.CallOption) (*Nil, error)
+		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+		Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+		PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.CallOption) (*PostResponse, error)
 	}
 
 	defaultRpc struct {
@@ -31,8 +37,17 @@ func NewRpc(cli zrpc.Client) Rpc {
 	}
 }
 
-// @desc ping
-func (m *defaultRpc) Ping(ctx context.Context, in *Nil, opts ...grpc.CallOption) (*Nil, error) {
+func (m *defaultRpc) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
 	client := pb.NewRpcClient(m.cli.Conn())
-	return client.Ping(ctx, in, opts...)
+	return client.Login(ctx, in, opts...)
+}
+
+func (m *defaultRpc) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+	client := pb.NewRpcClient(m.cli.Conn())
+	return client.Logout(ctx, in, opts...)
+}
+
+func (m *defaultRpc) PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.CallOption) (*PostResponse, error) {
+	client := pb.NewRpcClient(m.cli.Conn())
+	return client.PostMessage(ctx, in, opts...)
 }

@@ -8,9 +8,10 @@ TCPListenOn: 0.0.0.0:9898
 WSListenOn: 0.0.0.0:443
 
 SendChanSize: 1024
+  
 
 # kq etcd config
-Etcd:
+KqEtcd:
   Hosts:
     - 127.0.0.1:2379
   Key: "edge_01"

@@ -81,13 +81,17 @@ func (s *Session) Token() string {
 }
 
 // Close 关闭连接
-func (s *Session) Close() {
+func (s *Session) Close() error {
 	if atomic.CompareAndSwapInt32(&s.closeFlag, 0, 1) {
-		close(s.closeChan) // 关闭关闭通知通道
-		s.closeMutex.Lock()
-		_ = s.codec.Close() // 关闭编解码器
-		s.closeMutex.Unlock()
+		err := s.codec.Close()
+		close(s.closeChan)
+		if s.manager != nil {
+			s.manager.RemoveSession(s)
+		}
+		return err
 	}
+
+	return SessionClosedError
 }
 
 // Session 返回连接的用户 session
