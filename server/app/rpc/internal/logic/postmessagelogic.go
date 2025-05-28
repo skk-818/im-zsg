@@ -40,7 +40,7 @@ func (l *PostMessageLogic) PostMessage(in *pb.PostMsg) (*pb.PostResponse, error)
 
 	// 这里的 token 是接收方的 token
 	if len(in.ToToken) != 0 {
-		token = in.Token
+		token = in.ToToken
 		allDevice = true
 	} else {
 		name, token, id = session.FromString(in.SessionId).Info()

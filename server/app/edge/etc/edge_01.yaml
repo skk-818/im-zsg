@@ -2,10 +2,10 @@
 Name: edge_01
 
 # TCP
-TCPListenOn: 0.0.0.0:9898
+TCPListenOn: 0.0.0.0:9801
 
 # ws
-WSListenOn: 0.0.0.0:443
+WSListenOn: 0.0.0.0:9881
 
 SendChanSize: 1024
   

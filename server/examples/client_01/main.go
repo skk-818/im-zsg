@@ -20,7 +20,7 @@ var (
 func main() {
 	logx.DisableStat()
 
-	conn, err := net.Dial("tcp", "127.0.0.1:9898")
+	conn, err := net.Dial("tcp", "127.0.0.1:9801")
 	if err != nil {
 		fmt.Println("Error connecting:", err)
 		return
