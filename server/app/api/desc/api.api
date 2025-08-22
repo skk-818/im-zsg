@@ -5,3 +5,7 @@ service api {
 	post /ping
 }
 
+service api {
+    @handler authLogin
+    post /authLogin (AuthLoginReq) AuthLoginReply
+}
