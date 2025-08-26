@@ -3,9 +3,23 @@ option go_package = "./pb";
 package pb;
 
 service Rpc {
+  // edge 进行登录
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc Logout(LogoutRequest) returns (LogoutResponse);
   rpc PostMessage(PostMsg) returns (PostResponse);
+
+  // 业务部分
+  rpc AuthLogin(AuthLoginRequest) returns (AuthLoginResponse);
+}
+
+message AuthLoginRequest {
+  string Username = 1;// 用户名
+  string Password = 2;// 密码
+}
+
+message AuthLoginResponse {
+  string Token = 1;
+  string Authorization = 2;
 }
 
 message LoginRequest {

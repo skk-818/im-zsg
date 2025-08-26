@@ -5,7 +5,19 @@ service api {
 	post /ping
 }
 
+type (
+	AuthLoginReq {
+		Username string
+		Password string
+	}
+	AuthLoginReply {
+		Token         string
+		Authorization string
+	}
+)
+
 service api {
-    @handler authLogin
-    post /authLogin (AuthLoginReq) AuthLoginReply
+	@handler authLogin
+	post /authLogin (AuthLoginReq) returns (AuthLoginReply)
 }
+
