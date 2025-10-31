@@ -82,3 +82,19 @@ service api {
 	delete /api/friend/:friend_id returns (CommonResponse)
 }
 
+type (
+	AuthLoginReq {
+		Username string
+		Password string
+	}
+	AuthLoginReply {
+		Token         string
+		Authorization string
+	}
+)
+
+service api {
+	@handler authLogin
+	post /authLogin (AuthLoginReq) returns (AuthLoginReply)
+}
+

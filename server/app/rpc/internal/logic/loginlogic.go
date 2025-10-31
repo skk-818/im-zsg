@@ -25,15 +25,13 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 // Login 登录
-// 功能：登录 将用户信息存入Redis sessionId
+// 功能：登录 将用户连接信息存入Redis sessionId 这里是以 token 为 key 的列表，如果用户同时登录了多个设备，这里就是 token [web:sessionId ios:sessionId]
 // 参数：
 // in: 登录请求
 // 返回值：
 // *pb.LoginResponse 登录响应
 // *error 错误
 func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.LoginResponse, error) {
-	// todo: add your logic here and delete this line
-
 	_, err := l.svcCtx.BizRedis.Zadd(in.Token, time.Now().UnixMilli(), in.SessionId)
 	if err != nil {
 		logx.Errorf("[Login] Zadd token: %s sessionId: %s  error: %v", in.Token, in.SessionId, err)
