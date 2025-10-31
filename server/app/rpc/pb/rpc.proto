@@ -6,16 +6,31 @@ service Rpc {
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc Logout(LogoutRequest) returns (LogoutResponse);
   rpc PostMessage(PostMsg) returns (PostResponse);
+  
+  // 用户相关接口
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+  
+  // 好友相关接口
+  rpc GetFriendList(GetFriendListRequest) returns (GetFriendListResponse);
+  rpc AddFriend(AddFriendRequest) returns (AddFriendResponse);
+  rpc DeleteFriend(DeleteFriendRequest) returns (DeleteFriendResponse);
+  
+  // 群组相关接口
+  rpc GetGroupList(GetGroupListRequest) returns (GetGroupListResponse);
+  rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
 }
 
 message LoginRequest {
-  string Token = 1; // 用户信息
-  string Authorization = 2; // 校验信息
-  string SessionId = 3;
+  string username = 1;
+  string password = 2;
+  string device_id = 3;
 }
 
 message LoginResponse {
-  bytes body = 1;
+  int32 code = 1;
+  string message = 2;
+  UserInfo user_info = 3;
+  string token = 4;
 }
 
 message LogoutRequest {
@@ -44,4 +59,104 @@ message PostResponse {
   uint32 code = 1;
   string desc = 2;
   bytes data = 3;
+}
+// 用户信息
+message UserInfo {
+  uint64 user_id = 1;
+  string username = 2;
+  string nickname = 3;
+  string avatar = 4;
+  string email = 5;
+  int64 created_at = 6;
+}
+
+// 获取用户信息
+message GetUserInfoRequest {
+  string token = 1;
+  uint64 user_id = 2;
+}
+
+message GetUserInfoResponse {
+  int32 code = 1;
+  string message = 2;
+  UserInfo user_info = 3;
+}
+
+// 好友信息
+message FriendInfo {
+  uint64 user_id = 1;
+  string username = 2;
+  string nickname = 3;
+  string avatar = 4;
+  int32 status = 5; // 0:离线 1:在线
+  int64 last_seen = 6;
+}
+
+// 获取好友列表
+message GetFriendListRequest {
+  string token = 1;
+}
+
+message GetFriendListResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated FriendInfo friends = 3;
+}
+
+// 添加好友
+message AddFriendRequest {
+  string token = 1;
+  string friend_username = 2;
+  string remark = 3;
+}
+
+message AddFriendResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+// 删除好友
+message DeleteFriendRequest {
+  string token = 1;
+  uint64 friend_id = 2;
+}
+
+message DeleteFriendResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+// 群组信息
+message GroupInfo {
+  uint64 group_id = 1;
+  string group_name = 2;
+  string group_avatar = 3;
+  string description = 4;
+  int32 member_count = 5;
+  int64 created_at = 6;
+}
+
+// 获取群组列表
+message GetGroupListRequest {
+  string token = 1;
+}
+
+message GetGroupListResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated GroupInfo groups = 3;
+}
+
+// 创建群组
+message CreateGroupRequest {
+  string token = 1;
+  string group_name = 2;
+  string description = 3;
+  repeated uint64 member_ids = 4;
+}
+
+message CreateGroupResponse {
+  int32 code = 1;
+  string message = 2;
+  GroupInfo group_info = 3;
 }

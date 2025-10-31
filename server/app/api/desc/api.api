@@ -1,7 +1,84 @@
 syntax = "v1"
 
+info (
+	title:   "IM API"
+	desc:    "即时通讯系统API接口"
+	version: "v1"
+)
+
+// 用户登录请求
+type LoginRequest {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	DeviceId string `json:"device_id"`
+}
+
+// 用户登录响应
+type LoginResponse {
+	Code     int32    `json:"code"`
+	Message  string   `json:"message"`
+	Token    string   `json:"token,omitempty"`
+	UserInfo UserInfo `json:"user_info,omitempty"`
+}
+
+// 用户信息
+type UserInfo {
+	UserId    uint64 `json:"user_id"`
+	Username  string `json:"username"`
+	Nickname  string `json:"nickname"`
+	Avatar    string `json:"avatar"`
+	Email     string `json:"email"`
+	CreatedAt int64  `json:"created_at"`
+}
+
+// 好友信息
+type FriendInfo {
+	UserId   uint64 `json:"user_id"`
+	Username string `json:"username"`
+	Nickname string `json:"nickname"`
+	Avatar   string `json:"avatar"`
+	Status   int32  `json:"status"`
+	LastSeen int64  `json:"last_seen"`
+}
+
+// 好友列表响应
+type FriendListResponse {
+	Code    int32        `json:"code"`
+	Message string       `json:"message"`
+	Friends []FriendInfo `json:"friends,omitempty"`
+}
+
+// 添加好友请求
+type AddFriendRequest {
+	FriendUsername string `json:"friend_username"`
+	Remark         string `json:"remark,omitempty"`
+}
+
+// 通用响应
+type CommonResponse {
+	Code    int32  `json:"code"`
+	Message string `json:"message"`
+}
+
 service api {
 	@handler ping
 	post /ping
+
+	// 用户相关接口
+	@handler login
+	post /api/user/login (LoginRequest) returns (LoginResponse)
+
+	@handler getUserInfo
+	get /api/user/info returns (LoginResponse)
+
+	// 好友相关接口
+	@handler getFriendList
+	get /api/friend/list returns (FriendListResponse)
+
+	@handler addFriend
+	post /api/friend/add (AddFriendRequest) returns (CommonResponse)
+
+	@handler deleteFriend
+	delete /api/friend/:friend_id returns (CommonResponse)
 }
 

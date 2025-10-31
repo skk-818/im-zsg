@@ -36,3 +36,36 @@ func (s *RpcServer) PostMessage(ctx context.Context, in *pb.PostMsg) (*pb.PostRe
 	l := logic.NewPostMessageLogic(ctx, s.svcCtx)
 	return l.PostMessage(in)
 }
+
+// 用户相关接口
+func (s *RpcServer) GetUserInfo(ctx context.Context, in *pb.GetUserInfoRequest) (*pb.GetUserInfoResponse, error) {
+	l := logic.NewGetUserInfoLogic(ctx, s.svcCtx)
+	return l.GetUserInfo(in)
+}
+
+// 好友相关接口
+func (s *RpcServer) GetFriendList(ctx context.Context, in *pb.GetFriendListRequest) (*pb.GetFriendListResponse, error) {
+	l := logic.NewGetFriendListLogic(ctx, s.svcCtx)
+	return l.GetFriendList(in)
+}
+
+func (s *RpcServer) AddFriend(ctx context.Context, in *pb.AddFriendRequest) (*pb.AddFriendResponse, error) {
+	l := logic.NewAddFriendLogic(ctx, s.svcCtx)
+	return l.AddFriend(in)
+}
+
+func (s *RpcServer) DeleteFriend(ctx context.Context, in *pb.DeleteFriendRequest) (*pb.DeleteFriendResponse, error) {
+	l := logic.NewDeleteFriendLogic(ctx, s.svcCtx)
+	return l.DeleteFriend(in)
+}
+
+// 群组相关接口
+func (s *RpcServer) GetGroupList(ctx context.Context, in *pb.GetGroupListRequest) (*pb.GetGroupListResponse, error) {
+	l := logic.NewGetGroupListLogic(ctx, s.svcCtx)
+	return l.GetGroupList(in)
+}
+
+func (s *RpcServer) CreateGroup(ctx context.Context, in *pb.CreateGroupRequest) (*pb.CreateGroupResponse, error) {
+	l := logic.NewCreateGroupLogic(ctx, s.svcCtx)
+	return l.CreateGroup(in)
+}

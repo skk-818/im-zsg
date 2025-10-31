@@ -2,11 +2,12 @@ package logic
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/collection"
-	"google.golang.org/protobuf/proto"
 	"server/app/rpc/internal/svc"
 	"server/app/rpc/pb"
 	"server/common/session"
+
+	"github.com/zeromicro/go-zero/core/collection"
+	"google.golang.org/protobuf/proto"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -63,7 +64,7 @@ func (l *PostMessageLogic) PostMessage(in *pb.PostMsg) (*pb.PostResponse, error)
 	}
 
 	// 遍历 sessionId 列表，根据 session
-	set := collection.NewSet() // 用来存放接收方的 edge 名字
+	set := collection.NewSet[string]() // 用来存放接收方的 edge 名字
 
 	for _, sessionId := range sessionIds {
 		respName, _, respId := session.FromString(sessionId).Info()
@@ -91,7 +92,7 @@ func (l *PostMessageLogic) PostMessage(in *pb.PostMsg) (*pb.PostResponse, error)
 	}
 
 	// 循环 set
-	for _, respName := range set.KeysStr() { // 遍历 set 中的元素
+	for _, respName := range set.Keys() { // 遍历 set 中的元素
 		if queueWorker, ok := l.svcCtx.QueueList.Load(respName); ok {
 			err = queueWorker.Push(context.Background(), string(data))
 			if err != nil {

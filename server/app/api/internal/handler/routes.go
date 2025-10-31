@@ -13,6 +13,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodDelete,
+				Path:    "/api/friend/:friend_id",
+				Handler: deleteFriendHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/friend/add",
+				Handler: addFriendHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/friend/list",
+				Handler: getFriendListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/api/user/info",
+				Handler: getUserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/user/login",
+				Handler: loginHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/ping",
 				Handler: pingHandler(serverCtx),
