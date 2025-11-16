@@ -19,33 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Rpc_Login_FullMethodName         = "/pb.Rpc/Login"
-	Rpc_Logout_FullMethodName        = "/pb.Rpc/Logout"
-	Rpc_PostMessage_FullMethodName   = "/pb.Rpc/PostMessage"
-	Rpc_GetUserInfo_FullMethodName   = "/pb.Rpc/GetUserInfo"
-	Rpc_GetFriendList_FullMethodName = "/pb.Rpc/GetFriendList"
-	Rpc_AddFriend_FullMethodName     = "/pb.Rpc/AddFriend"
-	Rpc_DeleteFriend_FullMethodName  = "/pb.Rpc/DeleteFriend"
-	Rpc_GetGroupList_FullMethodName  = "/pb.Rpc/GetGroupList"
-	Rpc_CreateGroup_FullMethodName   = "/pb.Rpc/CreateGroup"
+	Rpc_Login_FullMethodName       = "/pb.Rpc/Login"
+	Rpc_Logout_FullMethodName      = "/pb.Rpc/Logout"
+	Rpc_PostMessage_FullMethodName = "/pb.Rpc/PostMessage"
+	Rpc_AuthLogin_FullMethodName   = "/pb.Rpc/AuthLogin"
 )
 
 // RpcClient is the client API for Rpc service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RpcClient interface {
+	// edge 进行登录
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.CallOption) (*PostResponse, error)
-	// 用户相关接口
-	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
-	// 好友相关接口
-	GetFriendList(ctx context.Context, in *GetFriendListRequest, opts ...grpc.CallOption) (*GetFriendListResponse, error)
-	AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*AddFriendResponse, error)
-	DeleteFriend(ctx context.Context, in *DeleteFriendRequest, opts ...grpc.CallOption) (*DeleteFriendResponse, error)
-	// 群组相关接口
-	GetGroupList(ctx context.Context, in *GetGroupListRequest, opts ...grpc.CallOption) (*GetGroupListResponse, error)
-	CreateGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error)
+	// 业务部分
+	AuthLogin(ctx context.Context, in *AuthLoginRequest, opts ...grpc.CallOption) (*AuthLoginResponse, error)
 }
 
 type rpcClient struct {
@@ -83,54 +72,9 @@ func (c *rpcClient) PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.C
 	return out, nil
 }
 
-func (c *rpcClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
-	out := new(GetUserInfoResponse)
-	err := c.cc.Invoke(ctx, Rpc_GetUserInfo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rpcClient) GetFriendList(ctx context.Context, in *GetFriendListRequest, opts ...grpc.CallOption) (*GetFriendListResponse, error) {
-	out := new(GetFriendListResponse)
-	err := c.cc.Invoke(ctx, Rpc_GetFriendList_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rpcClient) AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*AddFriendResponse, error) {
-	out := new(AddFriendResponse)
-	err := c.cc.Invoke(ctx, Rpc_AddFriend_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rpcClient) DeleteFriend(ctx context.Context, in *DeleteFriendRequest, opts ...grpc.CallOption) (*DeleteFriendResponse, error) {
-	out := new(DeleteFriendResponse)
-	err := c.cc.Invoke(ctx, Rpc_DeleteFriend_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rpcClient) GetGroupList(ctx context.Context, in *GetGroupListRequest, opts ...grpc.CallOption) (*GetGroupListResponse, error) {
-	out := new(GetGroupListResponse)
-	err := c.cc.Invoke(ctx, Rpc_GetGroupList_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rpcClient) CreateGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error) {
-	out := new(CreateGroupResponse)
-	err := c.cc.Invoke(ctx, Rpc_CreateGroup_FullMethodName, in, out, opts...)
+func (c *rpcClient) AuthLogin(ctx context.Context, in *AuthLoginRequest, opts ...grpc.CallOption) (*AuthLoginResponse, error) {
+	out := new(AuthLoginResponse)
+	err := c.cc.Invoke(ctx, Rpc_AuthLogin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -141,18 +85,12 @@ func (c *rpcClient) CreateGroup(ctx context.Context, in *CreateGroupRequest, opt
 // All implementations must embed UnimplementedRpcServer
 // for forward compatibility
 type RpcServer interface {
+	// edge 进行登录
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	PostMessage(context.Context, *PostMsg) (*PostResponse, error)
-	// 用户相关接口
-	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
-	// 好友相关接口
-	GetFriendList(context.Context, *GetFriendListRequest) (*GetFriendListResponse, error)
-	AddFriend(context.Context, *AddFriendRequest) (*AddFriendResponse, error)
-	DeleteFriend(context.Context, *DeleteFriendRequest) (*DeleteFriendResponse, error)
-	// 群组相关接口
-	GetGroupList(context.Context, *GetGroupListRequest) (*GetGroupListResponse, error)
-	CreateGroup(context.Context, *CreateGroupRequest) (*CreateGroupResponse, error)
+	// 业务部分
+	AuthLogin(context.Context, *AuthLoginRequest) (*AuthLoginResponse, error)
 	mustEmbedUnimplementedRpcServer()
 }
 
@@ -169,23 +107,8 @@ func (UnimplementedRpcServer) Logout(context.Context, *LogoutRequest) (*LogoutRe
 func (UnimplementedRpcServer) PostMessage(context.Context, *PostMsg) (*PostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostMessage not implemented")
 }
-func (UnimplementedRpcServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
-}
-func (UnimplementedRpcServer) GetFriendList(context.Context, *GetFriendListRequest) (*GetFriendListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFriendList not implemented")
-}
-func (UnimplementedRpcServer) AddFriend(context.Context, *AddFriendRequest) (*AddFriendResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddFriend not implemented")
-}
-func (UnimplementedRpcServer) DeleteFriend(context.Context, *DeleteFriendRequest) (*DeleteFriendResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteFriend not implemented")
-}
-func (UnimplementedRpcServer) GetGroupList(context.Context, *GetGroupListRequest) (*GetGroupListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetGroupList not implemented")
-}
-func (UnimplementedRpcServer) CreateGroup(context.Context, *CreateGroupRequest) (*CreateGroupResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateGroup not implemented")
+func (UnimplementedRpcServer) AuthLogin(context.Context, *AuthLoginRequest) (*AuthLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuthLogin not implemented")
 }
 func (UnimplementedRpcServer) mustEmbedUnimplementedRpcServer() {}
 
@@ -254,110 +177,20 @@ func _Rpc_PostMessage_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Rpc_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserInfoRequest)
+func _Rpc_AuthLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthLoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RpcServer).GetUserInfo(ctx, in)
+		return srv.(RpcServer).AuthLogin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Rpc_GetUserInfo_FullMethodName,
+		FullMethod: Rpc_AuthLogin_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RpcServer).GetUserInfo(ctx, req.(*GetUserInfoRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Rpc_GetFriendList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFriendListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RpcServer).GetFriendList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Rpc_GetFriendList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RpcServer).GetFriendList(ctx, req.(*GetFriendListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Rpc_AddFriend_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddFriendRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RpcServer).AddFriend(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Rpc_AddFriend_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RpcServer).AddFriend(ctx, req.(*AddFriendRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Rpc_DeleteFriend_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteFriendRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RpcServer).DeleteFriend(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Rpc_DeleteFriend_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RpcServer).DeleteFriend(ctx, req.(*DeleteFriendRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Rpc_GetGroupList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGroupListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RpcServer).GetGroupList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Rpc_GetGroupList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RpcServer).GetGroupList(ctx, req.(*GetGroupListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Rpc_CreateGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateGroupRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RpcServer).CreateGroup(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Rpc_CreateGroup_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RpcServer).CreateGroup(ctx, req.(*CreateGroupRequest))
+		return srv.(RpcServer).AuthLogin(ctx, req.(*AuthLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -382,28 +215,8 @@ var Rpc_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Rpc_PostMessage_Handler,
 		},
 		{
-			MethodName: "GetUserInfo",
-			Handler:    _Rpc_GetUserInfo_Handler,
-		},
-		{
-			MethodName: "GetFriendList",
-			Handler:    _Rpc_GetFriendList_Handler,
-		},
-		{
-			MethodName: "AddFriend",
-			Handler:    _Rpc_AddFriend_Handler,
-		},
-		{
-			MethodName: "DeleteFriend",
-			Handler:    _Rpc_DeleteFriend_Handler,
-		},
-		{
-			MethodName: "GetGroupList",
-			Handler:    _Rpc_GetGroupList_Handler,
-		},
-		{
-			MethodName: "CreateGroup",
-			Handler:    _Rpc_CreateGroup_Handler,
+			MethodName: "AuthLogin",
+			Handler:    _Rpc_AuthLogin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

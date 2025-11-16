@@ -2,8 +2,6 @@ package logic
 
 import (
 	"context"
-	"github.com/google/uuid"
-	"strings"
 
 	"server/app/rpc/internal/svc"
 	"server/app/rpc/pb"
@@ -25,17 +23,9 @@ func NewAuthLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AuthLog
 	}
 }
 
-// AuthLogin 用户 api 登录
-// @desc：登录，验证用户信息 并且为用户派发token
-// @params：
-// @in: *pb.AuthLoginRequest
-// @return： (*pb.AuthLoginResponse, error)
+// 业务部分
 func (l *AuthLoginLogic) AuthLogin(in *pb.AuthLoginRequest) (*pb.AuthLoginResponse, error) {
-	tokenStr := uuid.NewString()
-	token := strings.ReplaceAll(tokenStr, "-", "")
+	// todo: add your logic here and delete this line
 
-	return &pb.AuthLoginResponse{
-		Token:         token,
-		Authorization: token + "jwt",
-	}, nil
+	return &pb.AuthLoginResponse{}, nil
 }

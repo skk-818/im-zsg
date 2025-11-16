@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"github.com/zeromicro/go-zero/core/logx"
 
 	"server/app/rpc/internal/config"

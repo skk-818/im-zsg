@@ -13,41 +13,22 @@ import (
 )
 
 type (
-	AddFriendRequest      = pb.AddFriendRequest
-	AddFriendResponse     = pb.AddFriendResponse
-	CreateGroupRequest    = pb.CreateGroupRequest
-	CreateGroupResponse   = pb.CreateGroupResponse
-	DeleteFriendRequest   = pb.DeleteFriendRequest
-	DeleteFriendResponse  = pb.DeleteFriendResponse
-	FriendInfo            = pb.FriendInfo
-	GetFriendListRequest  = pb.GetFriendListRequest
-	GetFriendListResponse = pb.GetFriendListResponse
-	GetGroupListRequest   = pb.GetGroupListRequest
-	GetGroupListResponse  = pb.GetGroupListResponse
-	GetUserInfoRequest    = pb.GetUserInfoRequest
-	GetUserInfoResponse   = pb.GetUserInfoResponse
-	GroupInfo             = pb.GroupInfo
-	LoginRequest          = pb.LoginRequest
-	LoginResponse         = pb.LoginResponse
-	LogoutRequest         = pb.LogoutRequest
-	LogoutResponse        = pb.LogoutResponse
-	PostMsg               = pb.PostMsg
-	PostResponse          = pb.PostResponse
-	UserInfo              = pb.UserInfo
+	AuthLoginRequest  = pb.AuthLoginRequest
+	AuthLoginResponse = pb.AuthLoginResponse
+	LoginRequest      = pb.LoginRequest
+	LoginResponse     = pb.LoginResponse
+	LogoutRequest     = pb.LogoutRequest
+	LogoutResponse    = pb.LogoutResponse
+	PostMsg           = pb.PostMsg
+	PostResponse      = pb.PostResponse
 
 	Rpc interface {
+		// edge 进行登录
 		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 		Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 		PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.CallOption) (*PostResponse, error)
-		// 用户相关接口
-		GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
-		// 好友相关接口
-		GetFriendList(ctx context.Context, in *GetFriendListRequest, opts ...grpc.CallOption) (*GetFriendListResponse, error)
-		AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*AddFriendResponse, error)
-		DeleteFriend(ctx context.Context, in *DeleteFriendRequest, opts ...grpc.CallOption) (*DeleteFriendResponse, error)
-		// 群组相关接口
-		GetGroupList(ctx context.Context, in *GetGroupListRequest, opts ...grpc.CallOption) (*GetGroupListResponse, error)
-		CreateGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error)
+		// 业务部分
+		AuthLogin(ctx context.Context, in *AuthLoginRequest, opts ...grpc.CallOption) (*AuthLoginResponse, error)
 	}
 
 	defaultRpc struct {
@@ -61,6 +42,7 @@ func NewRpc(cli zrpc.Client) Rpc {
 	}
 }
 
+// edge 进行登录
 func (m *defaultRpc) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
 	client := pb.NewRpcClient(m.cli.Conn())
 	return client.Login(ctx, in, opts...)
@@ -76,35 +58,8 @@ func (m *defaultRpc) PostMessage(ctx context.Context, in *PostMsg, opts ...grpc.
 	return client.PostMessage(ctx, in, opts...)
 }
 
-// 用户相关接口
-func (m *defaultRpc) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
+// 业务部分
+func (m *defaultRpc) AuthLogin(ctx context.Context, in *AuthLoginRequest, opts ...grpc.CallOption) (*AuthLoginResponse, error) {
 	client := pb.NewRpcClient(m.cli.Conn())
-	return client.GetUserInfo(ctx, in, opts...)
-}
-
-// 好友相关接口
-func (m *defaultRpc) GetFriendList(ctx context.Context, in *GetFriendListRequest, opts ...grpc.CallOption) (*GetFriendListResponse, error) {
-	client := pb.NewRpcClient(m.cli.Conn())
-	return client.GetFriendList(ctx, in, opts...)
-}
-
-func (m *defaultRpc) AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*AddFriendResponse, error) {
-	client := pb.NewRpcClient(m.cli.Conn())
-	return client.AddFriend(ctx, in, opts...)
-}
-
-func (m *defaultRpc) DeleteFriend(ctx context.Context, in *DeleteFriendRequest, opts ...grpc.CallOption) (*DeleteFriendResponse, error) {
-	client := pb.NewRpcClient(m.cli.Conn())
-	return client.DeleteFriend(ctx, in, opts...)
-}
-
-// 群组相关接口
-func (m *defaultRpc) GetGroupList(ctx context.Context, in *GetGroupListRequest, opts ...grpc.CallOption) (*GetGroupListResponse, error) {
-	client := pb.NewRpcClient(m.cli.Conn())
-	return client.GetGroupList(ctx, in, opts...)
-}
-
-func (m *defaultRpc) CreateGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error) {
-	client := pb.NewRpcClient(m.cli.Conn())
-	return client.CreateGroup(ctx, in, opts...)
+	return client.AuthLogin(ctx, in, opts...)
 }
